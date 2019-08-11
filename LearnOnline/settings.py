@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'xadmin',
     'captcha',
+    'pure_pagination',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -132,10 +134,15 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 静态文件配置
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+# 上传媒体文件配置
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # 云片发送验证码配置
 API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
@@ -143,3 +150,11 @@ API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
 # redis相关配置
 REDIS_HOST = "127.0.0.1"
 REDIS_PORT = 6379
+
+# 分页app相关配置
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 5,
+    'MARGIN_PAGES_DISPLAYED': 2,
+
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}

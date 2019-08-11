@@ -23,11 +23,18 @@ class CourseOrg(BaseModel):
                                 choices=(("pxjg", "培训机构"), ("gr", "个人"), ("gx", "高校")))
     click_nums = models.IntegerField(verbose_name="点击数", default=0)
     fav_nums = models.IntegerField(verbose_name="收藏数", default=0)
-    image = models.ImageField(verbose_name="logo", upload_to="org/%Y/%m", max_length=100)
+    image = models.ImageField(verbose_name="logo", upload_to="org/images/%Y/%m", max_length=100)
     city = models.ForeignKey(Cities, verbose_name="城市", on_delete=models.CASCADE)
     address = models.CharField(verbose_name="机构地址", max_length=200)
     students = models.IntegerField(verbose_name="学习人数", default=0)
     course_nums = models.IntegerField(verbose_name="课程数", default=0)
+    is_auth = models.BooleanField(verbose_name="是否认证", default=False)
+    is_gold = models.BooleanField(verbose_name="是否金牌", default=False)
+
+    # 获取对应机构下的课程
+    def get_courses(self):
+        courses = self.courses_set.filter(is_classic=True)[:3]
+        return courses
 
     class Meta:
         verbose_name = "课程机构"
@@ -47,7 +54,7 @@ class Teachers(BaseModel):
     points = models.CharField(verbose_name="教学特点", max_length=50)
     click_nums = models.IntegerField(verbose_name="点击数", default=0)
     fav_nums = models.IntegerField(verbose_name="收藏人数", default=0)
-    image = models.ImageField(verbose_name="头像", upload_to="teacher/%Y/%m", max_length=100)
+    image = models.ImageField(verbose_name="头像", upload_to="teacher/images/%Y/%m", max_length=100)
 
     class Meta:
         verbose_name = "教师"

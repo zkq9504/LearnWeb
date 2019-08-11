@@ -18,10 +18,12 @@ from django.urls import path
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
+from django.views.static import serve
 
 import xadmin
 
 from apps.users.views import LoginView, DynamicLoginView, LogoutView, SendSmsView, RegisterView
+from LearnOnline.settings import MEDIA_ROOT
 
 
 urlpatterns = [
@@ -34,4 +36,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^send_sms/', csrf_exempt(SendSmsView.as_view()), name="send_sms"),
+
+    # 配置上传文件的url
+    url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+
+    # 课程机构相关页面
+    url(r'^org/', include(('apps.organizations.urls', 'organizations'), namespace="org")),
 ]

@@ -3,11 +3,12 @@ from django.db import models
 
 # Create your models here.
 from users.models import BaseModel
-from organizations.models import Teachers
+from organizations.models import Teachers, CourseOrg
 
 
 class Courses(BaseModel):
     teacher = models.ForeignKey(Teachers, verbose_name="讲师", on_delete=models.CASCADE)
+    course_org = models.ForeignKey(CourseOrg, verbose_name="课程机构", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(verbose_name="课程名", max_length=100)
     desc = models.CharField(verbose_name="课程描述", max_length=500)
     degree = models.CharField(verbose_name="课程难度", choices=(("CJ", "初级"), ("ZJ", "中级"), ("GJ", "高级")), max_length=2)
@@ -21,7 +22,8 @@ class Courses(BaseModel):
     teacher_tell = models.CharField(verbose_name="老师告诉你", default="", max_length=500)
 
     detail = models.TextField(verbose_name="课程详情")
-    image = models.ImageField(verbose_name="封面图", upload_to="courses/%Y/%m")
+    image = models.ImageField(verbose_name="封面图", upload_to="courses/images/%Y/%m")
+    is_classic = models.BooleanField(verbose_name="是否经典", default=False)
 
     class Meta:
         verbose_name = "课程信息"
