@@ -6,6 +6,7 @@ from django.http import JsonResponse
 
 from organizations.models import CourseOrg, Cities
 from organizations.forms import AddAskForm
+from operations.models import UserFavorite
 
 
 class OrgView(View):
@@ -60,3 +61,76 @@ class AddAskView(View):
                 "status": "fail",
                 "msg": "提交失败，请检查后重新提交"
             })
+
+
+class OrgHomeView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = "home"
+        course_org = CourseOrg.objects.get(id=int(org_id))
+        course_org.click_nums += 1
+        course_org.save()
+        all_courses = course_org.courses_set.order_by("-students")[:3]
+        all_teachers = course_org.teachers_set.order_by("-fav_nums")[:1]
+        has_fav = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
+                has_fav = True
+        return render(request, "org-detail-homepage.html", {
+             "course_org": course_org,
+             "all_courses": all_courses,
+             "all_teachers": all_teachers,
+             "current_page": current_page,
+             "has_fav": has_fav,
+        })
+
+
+class OrgCourseView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = "course"
+        course_org = CourseOrg.objects.get(id=int(org_id))
+        all_courses = course_org.courses_set.order_by("-fav_nums")
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_courses, per_page=5, request=request)
+        courses = p.page(page)
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
+                has_fav = True
+        return render(request, "org-detail-course.html", {
+             "course_org": course_org,
+             "all_courses": courses,
+             "current_page": current_page,
+             "has_fav": has_fav,
+        })
+
+
+class OrgDescView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = "desc"
+        course_org = CourseOrg.objects.get(id=int(org_id))
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
+                has_fav = True
+        return render(request, "org-detail-desc.html", {
+             "course_org": course_org,
+             "current_page": current_page,
+             "has_fav": has_fav,
+        })
+
+
+class OrgTeacherView(View):
+    def get(self, request, org_id, *args, **kwargs):
+        current_page = "teacher"
+        course_org = CourseOrg.objects.get(id=int(org_id))
+        all_teachers = course_org.teachers_set.order_by("-fav_nums")
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
+                has_fav = True
+        return render(request, "org-detail-teachers.html", {
+             "course_org": course_org,
+             "all_teachers": all_teachers,
+             "current_page": current_page,
+             "has_fav": has_fav,
+        })
