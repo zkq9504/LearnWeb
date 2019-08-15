@@ -55,7 +55,8 @@ class Teachers(BaseModel):
     click_nums = models.IntegerField(verbose_name="点击数", default=0)
     fav_nums = models.IntegerField(verbose_name="收藏人数", default=0)
     image = models.ImageField(verbose_name="头像", upload_to="teacher/images/%Y/%m", max_length=100)
-    has_auth = models.BooleanField(verbose_name="是否认证", default=False)
+    is_auth = models.BooleanField(verbose_name="是否认证", default=False)
+    is_gold = models.BooleanField(verbose_name="是否金牌", default=False)
 
     class Meta:
         verbose_name = "教师"

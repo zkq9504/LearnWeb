@@ -11,6 +11,7 @@ class Courses(BaseModel):
     course_org = models.ForeignKey(CourseOrg, verbose_name="课程机构", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(verbose_name="课程名", max_length=100)
     desc = models.CharField(verbose_name="课程描述", max_length=500)
+    notice = models.CharField(verbose_name="课程公告", default="", max_length=100)
     degree = models.CharField(verbose_name="课程难度", choices=(("CJ", "初级"), ("ZJ", "中级"), ("GJ", "高级")), max_length=2)
     learn_times = models.IntegerField(verbose_name="学习时长（分钟数）", default=0,)
     students = models.IntegerField(verbose_name="学习人数", default=0)
@@ -36,7 +37,6 @@ class Courses(BaseModel):
 class Lessons(BaseModel):
     course = models.ForeignKey(Courses, verbose_name="课程", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="章节名", max_length=100)
-    learn_times = models.IntegerField(verbose_name="学习时长（分钟数）", default=0,)
 
     class Meta:
         verbose_name = "课程章节"
@@ -47,10 +47,10 @@ class Lessons(BaseModel):
 
 
 class Video(BaseModel):
-    lesson = models.ForeignKey(Lessons, verbose_name="课程", on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lessons, verbose_name="课程章节", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="视频名", max_length=100)
     learn_times = models.IntegerField(verbose_name="学习时长（分钟数）", default=0,)
-    url = models.CharField(verbose_name="视频地址", max_length=200)
+    url = models.CharField(verbose_name="视频地址", max_length=1000)
 
     class Meta:
         verbose_name = "课程视频"
@@ -71,3 +71,15 @@ class CourseResource(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class CourseTag(BaseModel):
+    course = models.ForeignKey(Courses, verbose_name="课程", on_delete=models.CASCADE)
+    tag = models.CharField(verbose_name="标签", max_length=20)
+
+    class Meta:
+        verbose_name = "课程标签"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.tag

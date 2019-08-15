@@ -1,6 +1,6 @@
 import xadmin
 
-from courses.models import Courses, Lessons, Video, CourseResource
+from courses.models import Courses, Lessons, Video, CourseResource, CourseTag
 
 
 class GlobalSettings(object):
@@ -23,14 +23,14 @@ class CoursesAdmin(object):
 
 
 class LessonsAdmin(object):
-    list_display = ["id", "course", "name", "learn_times", "add_time"]
-    search_fields = ["course", "name", "learn_times"]
-    list_filter = ["course", "name", "learn_times", "add_time"]
-    list_editable = ["course", "name", "learn_times"]
+    list_display = ["id", "course", "name", "add_time"]
+    search_fields = ["course", "name"]
+    list_filter = ["course", "name", "add_time"]
+    list_editable = ["course", "name"]
 
 
 class VideoAdmin(object):
-    list_display = ["id", "lesson", "name", "learn_times", "url", "add_time"]
+    list_display = ["id", "lesson", "name", "learn_times", "add_time"]
     search_fields = ["lesson", "name", "learn_times", "url"]
     list_filter = ["lesson", "name", "learn_times", "url", "add_time"]
     list_editable = ["lesson", "name", "learn_times", "url"]
@@ -43,10 +43,19 @@ class CourseResourceAdmin(object):
     list_editable = ["course", "name", "file"]
 
 
+class CourseTagAdmin(object):
+    list_display = ["course", "tag", "add_time"]
+    search_fields = ["course", "tag"]
+    list_filter = ["course", "tag", "add_time"]
+    list_editable = ["course", "tag"]
+
+
 xadmin.site.register(Courses, CoursesAdmin)
 xadmin.site.register(Lessons, LessonsAdmin)
 xadmin.site.register(Video, VideoAdmin)
 xadmin.site.register(CourseResource, CourseResourceAdmin)
+xadmin.site.register(CourseTag, CourseTagAdmin)
+
 
 xadmin.site.register(xadmin.views.CommAdminView, GlobalSettings)
 xadmin.site.register(xadmin.views.BaseAdminView, BaseSettings)

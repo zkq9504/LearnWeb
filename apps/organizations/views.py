@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic.base import View
-from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+from pure_pagination import Paginator, PageNotAnInteger
 from django.http import JsonResponse
 
 
-from organizations.models import CourseOrg, Cities
+from organizations.models import CourseOrg, Cities, Teachers
 from organizations.forms import AddAskForm
 from operations.models import UserFavorite
 
@@ -95,6 +95,7 @@ class OrgCourseView(View):
             page = 1
         p = Paginator(all_courses, per_page=5, request=request)
         courses = p.page(page)
+        has_fav = False
         if request.user.is_authenticated:
             if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
                 has_fav = True
@@ -110,6 +111,7 @@ class OrgDescView(View):
     def get(self, request, org_id, *args, **kwargs):
         current_page = "desc"
         course_org = CourseOrg.objects.get(id=int(org_id))
+        has_fav = False
         if request.user.is_authenticated:
             if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
                 has_fav = True
@@ -125,6 +127,7 @@ class OrgTeacherView(View):
         current_page = "teacher"
         course_org = CourseOrg.objects.get(id=int(org_id))
         all_teachers = course_org.teachers_set.order_by("-fav_nums")
+        has_fav = False
         if request.user.is_authenticated:
             if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=course_org.id):
                 has_fav = True
@@ -133,4 +136,45 @@ class OrgTeacherView(View):
              "all_teachers": all_teachers,
              "current_page": current_page,
              "has_fav": has_fav,
+        })
+
+
+class TeachersView(View):
+    def get(self, request, *args, **kwargs):
+        all_teachers = Teachers.objects.all()
+        teacher_nums = all_teachers.count()
+        fav_teachers = all_teachers.order_by("-fav_nums")[:10]
+        sort = request.GET.get("sort")
+        if sort == "hot":
+            all_teachers = all_teachers.order_by("-click_nums")
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_teachers, per_page=3, request=request)
+        teachers = p.page(page)
+        return render(request, "teachers-list.html", {
+            "teachers": teachers,
+            "teacher_nums": teacher_nums,
+            "sort": sort,
+            "fav_teachers": fav_teachers
+        })
+
+
+class TeacherDetailView(View):
+    def get(self, request, teacher_id, *args, **kwargs):
+        teacher = Teachers.objects.get(id=teacher_id)
+        fav_teachers = Teachers.objects.order_by("-fav_nums")[:5]
+        has_fav = False
+        org_has_fav = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_type=3, fav_id=int(teacher.id)):
+                has_fav = True
+            if UserFavorite.objects.filter(user=request.user, fav_type=2, fav_id=int(teacher.org.id)):
+                org_has_fav = True
+        return render(request, "teacher-detail.html", {
+            "teacher": teacher,
+            "fav_teachers": fav_teachers,
+            "has_fav": has_fav,
+            "org_has_fav": org_has_fav,
         })
