@@ -44,7 +44,7 @@ class AddFavView(View):
             else:
                 if fav_type == 1:
                     course = Courses.objects.get(id=fav_id)
-                    course.fav_nums +=1
+                    course.fav_nums += 1
                     course.save()
                 elif fav_type == 2:
                     org = CourseOrg.objects.get(id=fav_id)

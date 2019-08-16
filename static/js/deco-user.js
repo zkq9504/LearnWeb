@@ -90,7 +90,7 @@ function changePhoneSubmit($btn){
         cache: false,
         type: 'post',
         dataType:'json',
-        url:"/users/update/mobile/",
+        url:"/user/update/mobile/",
         data:$('#jsChangePhoneForm').serialize(),
         beforeSend:function(XMLHttpRequest){
             $btn.val("发送中...");
@@ -175,7 +175,7 @@ $(function(){
             cache: false,
             type: "POST",
             dataType:'json',
-            url:"/users/update/pwd/",
+            url:"/user/update/pwd/",
             data:$('#jsResetPwdForm').serialize(),
             async: true,
             success: function(data) {
@@ -256,7 +256,7 @@ $(function(){
             cache: false,
             type: 'post',
             dataType:'json',
-            url:"/users/info/",
+            url:"/user/info/",
             data:$jsEditUserForm.serialize(),
             async: true,
             beforeSend:function(XMLHttpRequest){

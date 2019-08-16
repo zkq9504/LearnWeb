@@ -48,4 +48,7 @@ urlpatterns = [
 
     # 用户操作
     url(r'^op/', include(('apps.operations.urls', 'operations'), namespace="op")),
+
+    # 用户空间
+    url(r'^user/', include(('apps.users.urls', 'users'), namespace="user")),
 ]
