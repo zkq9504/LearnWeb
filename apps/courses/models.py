@@ -1,7 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
 from users.models import BaseModel
 from organizations.models import Teachers, CourseOrg
 
@@ -25,6 +24,7 @@ class Courses(BaseModel):
     detail = models.TextField(verbose_name="课程详情")
     image = models.ImageField(verbose_name="封面图", upload_to="courses/images/%Y/%m")
     is_classic = models.BooleanField(verbose_name="是否经典", default=False)
+    is_banner = models.BooleanField(verbose_name="是否轮播图", default=False)
 
     class Meta:
         verbose_name = "课程信息"

@@ -54,3 +54,17 @@ class UserCourse(BaseModel):
     class Meta:
         verbose_name = "用户课程"
         verbose_name_plural = verbose_name
+
+
+class Banner(BaseModel):
+    title = models.CharField(verbose_name="标题", max_length=100)
+    image = models.ImageField(verbose_name="图片", upload_to="banner/%Y%m", max_length=200)
+    url = models.URLField(verbose_name="访问链接", max_length=300)
+    index = models.IntegerField(verbose_name="图片顺序", default=0)
+
+    class Meta:
+        verbose_name = "轮播图"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title

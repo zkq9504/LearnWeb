@@ -2,10 +2,25 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import JsonResponse
 
-from operations.models import UserFavorite, CourseComments
+from operations.models import UserFavorite, CourseComments, Banner
 from courses.models import Courses
 from organizations.models import CourseOrg, Teachers
 from apps.operations.forms import UserFavForm, CommentForm
+
+
+class IndexView(View):
+    """首页视图"""
+    def get(self, request, *args, **kwargs):
+        banners = Banner.objects.order_by("index")
+        banner_courses = Courses.objects.filter(is_banner=True)
+        courses = Courses.objects.order_by("add_time")[:6]
+        orgs = CourseOrg.objects.order_by("add_time")[:15]
+        return render(request, "index.html", {
+            "banners": banners,
+            "banner_courses": banner_courses,
+            "courses": courses,
+            "orgs": orgs,
+        })
 
 
 class AddFavView(View):

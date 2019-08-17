@@ -23,13 +23,14 @@ from django.views.static import serve
 import xadmin
 
 from apps.users.views import LoginView, DynamicLoginView, LogoutView, SendSmsView, RegisterView
+from apps.operations.views import IndexView
 from LearnOnline.settings import MEDIA_ROOT
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
-    path('', TemplateView.as_view(template_name="index.html"), name="index"),
+    path('', IndexView.as_view(), name="index"),
     path('login/', LoginView.as_view(), name='login'),
     path('d_login/', DynamicLoginView.as_view(), name='d_login'),
     path('register/', RegisterView.as_view(), name='register'),

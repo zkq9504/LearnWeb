@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from pure_pagination import Paginator, PageNotAnInteger
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 from organizations.models import CourseOrg, Cities, Teachers
@@ -12,6 +13,9 @@ from operations.models import UserFavorite
 class OrgView(View):
     def get(self, request, *args, **kwargs):
         all_orgs = CourseOrg.objects.all()
+        keywords = request.GET.get("keywords", "")
+        if keywords:
+            all_orgs = all_orgs.filter(Q(name__icontains=keywords) | Q(desc__icontains=keywords))
         all_city = Cities.objects.all()
         hot_orgs = all_orgs.order_by("-click_nums")[:3]
         category = request.GET.get("ct", "")
@@ -45,6 +49,8 @@ class OrgView(View):
                             "city_id": city_id,
                             "sort": sort,
                             "hot_orgs": hot_orgs,
+                            "keywords": keywords,
+                            "s_type": "org"
         })
 
 
@@ -142,6 +148,9 @@ class OrgTeacherView(View):
 class TeachersView(View):
     def get(self, request, *args, **kwargs):
         all_teachers = Teachers.objects.all()
+        keywords = request.GET.get("keywords", "")
+        if keywords:
+            all_teachers = all_teachers.filter(name__icontains=keywords)
         teacher_nums = all_teachers.count()
         fav_teachers = all_teachers.order_by("-fav_nums")[:10]
         sort = request.GET.get("sort")
@@ -157,7 +166,9 @@ class TeachersView(View):
             "teachers": teachers,
             "teacher_nums": teacher_nums,
             "sort": sort,
-            "fav_teachers": fav_teachers
+            "fav_teachers": fav_teachers,
+            "keywords": keywords,
+            "s_type": "teacher"
         })
 
 

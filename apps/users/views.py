@@ -13,7 +13,7 @@ from apps.users.forms import ImageUploadForm, InfoForm, UpdatePwdForm, UpdateMob
 from apps.utils.YunPian import send_verify_sms
 from apps.utils.random_str import generate_random
 from users.models import UserProfile
-from operations.models import UserFavorite, UserMsg
+from operations.models import UserFavorite, UserMsg, Banner
 from organizations.models import CourseOrg, Teachers
 from courses.models import Courses
 from LearnOnline.settings import REDIS_HOST, REDIS_PORT
@@ -23,13 +23,15 @@ class LoginView(View):
     """用户登录"""
 
     def get(self, request, *args, **kwargs):
+        banners = Banner.objects.order_by("index")[:3]
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse("index"))
         next = request.GET.get("next", "")
         login_form = DynamicLoginForm()
-        return render(request, "login.html", {"login_form": login_form, "next": next})
+        return render(request, "login.html", {"login_form": login_form, "next": next, "banners": banners})
 
     def post(self, request, *args, **kwargs):
+        banners = Banner.objects.order_by("index")[:3]
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             user_name = login_form.cleaned_data["username"]
@@ -42,9 +44,9 @@ class LoginView(View):
                     return HttpResponseRedirect(next)
                 return HttpResponseRedirect(reverse("index"))
             else:
-                return render(request, "login.html", {"msg": "用户名或密码错误", "login_form": login_form})
+                return render(request, "login.html", {"msg": "用户名或密码错误", "login_form": login_form, "banners": banners})
         else:
-            return render(request, "login.html", {"login_form": login_form})
+            return render(request, "login.html", {"login_form": login_form, "banners": banners})
 
 
 class DynamicLoginView(View):
@@ -54,8 +56,10 @@ class DynamicLoginView(View):
             return HttpResponseRedirect(reverse("index"))
         next = request.GET.get("next", "")
         login_form = DynamicLoginForm()
-        return render(request, "login.html", {"login_form": login_form, "next": next})
+        banners = Banner.objects.order_by("index")[:3]
+        return render(request, "login.html", {"login_form": login_form, "next": next, "banners": banners})
     def post(self,request):
+        banners = Banner.objects.order_by("index")[:3]
         login_form = DynamicLoginPostForm
         dynamic_login = True
         if login_form.is_valid():
@@ -77,15 +81,18 @@ class DynamicLoginView(View):
             d_form = DynamicLoginForm()
             return render(request, "login.html", {"login_form": login_form,
                                                   "d_form": d_form,
-                                                  "dynamic_login": dynamic_login})
+                                                  "dynamic_login": dynamic_login,
+                                                  "banners": banners})
 
 
 class RegisterView(View):
     """用户注册"""
     def get(self, request):
+        banners = Banner.objects.order_by("index")[:3]
         register_get_form = RegisterGetForm()
-        return render(request, "register.html", {"register_get_form": register_get_form})
+        return render(request, "register.html", {"register_get_form": register_get_form, "banners": banners})
     def post(self, request):
+        banners = Banner.objects.order_by("index")[:3]
         register_post_form = RegisterPostForm(request.POST)
         if register_post_form.is_valid():
             mobile = register_post_form.cleaned_data["mobile"]
@@ -100,7 +107,8 @@ class RegisterView(View):
             register_get_form = RegisterGetForm()
             return render(request, "register.html", {
                 "register_get_form": register_get_form,
-                "register_post_form": register_post_form})
+                "register_post_form": register_post_form,
+                "banners": banners})
 
 
 class LogoutView(View):

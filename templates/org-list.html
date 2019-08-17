@@ -54,9 +54,9 @@
 		<div class="layout">
 			<div class="head">
 				<ul class="tab_header">
-					<li class="{% ifequal sort '' %}active{% endifequal %}"><a href="?ct={{ category }}&city={{ city_id }}">全部</a> </li>
-					<li class="{% ifequal sort 'students' %}active{% endifequal %}"><a href="?sort=students&ct={{ category }}&city={{ city_id }}">学习人数 &#8595;</a></li>
-					<li class="{% ifequal sort 'courses' %}active{% endifequal %}"><a href="?sort=courses&ct={{ category }}&city={{ city_id }}">课程数 &#8595;</a></li>
+                    <li class="{% if sort != 'students' and sort != 'courses' %}active{% endif %}"><a href="?sort=&ct={{ category }}&city={{ city_id }}&keywords={{ keywords }}">全部</a> </li>
+					<li class="{% ifequal sort 'students' %}active{% endifequal %}"><a href="?sort=students&ct={{ category }}&city={{ city_id }}&keywords={{ keywords }}">学习人数 &#8595;</a></li>
+					<li class="{% ifequal sort 'courses' %}active{% endifequal %}"><a href="?sort=courses&ct={{ category }}&city={{ city_id }}&keywords={{ keywords }}">课程数 &#8595;</a></li>
 				</ul>
 			</div>
 

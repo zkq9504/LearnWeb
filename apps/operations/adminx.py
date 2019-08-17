@@ -1,6 +1,6 @@
 import xadmin
 
-from operations.models import UserAsk, UserCourse, UserFavorite, UserMsg, CourseComments
+from operations.models import UserAsk, UserCourse, UserFavorite, UserMsg, CourseComments, Banner
 
 
 class UserAskAdmin(object):
@@ -33,8 +33,15 @@ class CourseCommentsAdmin(object):
     list_filter = ["user", "course", "comments", "add_time"]
 
 
+class BannerAdmin(object):
+
+    list_display = ["title", "image", "url", "index"]
+    search_fields = ["title", "image", "url", "index"]
+    list_filter = ["title", "image", "url", "index", "add_time"]
+
+
 xadmin.site.register(UserAsk, UserAskAdmin)
 xadmin.site.register(UserCourse, UserCourseAdmin)
 xadmin.site.register(UserFavorite, UserFavoriteAdmin)
 xadmin.site.register(UserMsg, UserMsgAdmin)
-xadmin.site.register(CourseComments, CourseCommentsAdmin)
+xadmin.site.register(Banner, BannerAdmin)

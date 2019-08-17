@@ -43,7 +43,11 @@
                             <li><span class="pram word3">课程类别：</span><span title="">{{ course.category }}</span></li>
 							<li class="piclist"><span class="pram word4">学习用户：</span>
                                 
-                                    <span class="pic"><img width="40" height="40" src="../media/image/2016/12/default_big_14.png"/></span>
+                                    <span class="pic">
+                                        {% for user_course in course.usercourse_set.all|slice:5 %}
+                                        <img width="40" height="40" src="{{ user_course.user.image.url }}"/>
+                                        {% endfor %}
+                                    </span>
                                 
 							</li>
 						</ul>

@@ -71,14 +71,17 @@
                 <a class="index-font" href="/">回到首页</a>
             </div>
             <div class="fl slide">
-                <div class="imgslide has-dots" style="width: 483px; overflow: hidden; height: 0px;">
-                    <ul class="imgs" style="position: relative; left: 0%; width: 0%; height: 0px;">
-
+                <div class="imgslide">
+                    <ul class="imgs">
+                            {% for banner in banners %}
+                            <li><a href="{{ banner.url }}"><img width="483" height="472" src="{{ banner.image.url }}" /></a></li>
+                            {% endfor %}
                     </ul>
-                    <ol class="dots"></ol></div>
+                </div>
                 <div class="unslider-arrow prev"></div>
                 <div class="unslider-arrow next"></div>
             </div>
+
             <div class="fl form-box">
                 <div class="tab">
                     <h2 class="active">手机注册</h2>
