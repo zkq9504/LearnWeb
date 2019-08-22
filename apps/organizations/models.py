@@ -1,6 +1,8 @@
 from django.db import models
 
-from users.models import BaseModel
+from DjangoUeditor.models import UEditorField
+
+from users.models import BaseModel, UserProfile
 
 
 class Cities(BaseModel):
@@ -16,8 +18,10 @@ class Cities(BaseModel):
 
 
 class CourseOrg(BaseModel):
+    user = models.OneToOneField(UserProfile, verbose_name="用户", on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(verbose_name="机构名称", unique=True, max_length=100)
-    desc = models.CharField(verbose_name="机构描述", max_length=500)
+    desc = UEditorField(verbose_name="机构描述", width=580, height=400, imagePath="orgs/ueditor/images/",
+                               filePath="orgs/ueditor/files/")
     tag = models.CharField(verbose_name="机构标签", default="全国知名", max_length=50)
     category = models.CharField(verbose_name="机构类别", default="培训机构", max_length=4,
                                 choices=(("pxjg", "培训机构"), ("gr", "个人"), ("gx", "高校")))
@@ -42,6 +46,17 @@ class CourseOrg(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def show_image(self):
+        from django.utils.safestring import mark_safe
+        return mark_safe("<img width=200px height=150px src='{}'>".format(self.image.url))
+    show_image.short_description = "图片"
+
+    def go_to(self):
+        from django.utils.safestring import mark_safe
+        return mark_safe("<a href='/org/{}'>跳转</a>".format(self.id))
+
+    go_to.short_description = "跳转"
 
 
 class Teachers(BaseModel):

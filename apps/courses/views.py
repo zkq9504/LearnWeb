@@ -78,10 +78,10 @@ class CourseLessonView(LoginRequiredMixin, View):
         user_courses = UserCourse.objects.filter(user=request.user, course=course)
         if not user_courses:
             user_course = UserCourse(user=request.user, course=course)
-            course.save()
+            user_course.save()
 
             course.students += 1
-            user_course.save()
+            course.save()
         # 学过该课程的同学还学过的课程
         user_courses = UserCourse.objects.filter(course=course)
         users_id = [course_user.user.id for course_user in user_courses]

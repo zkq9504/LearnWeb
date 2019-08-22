@@ -52,4 +52,7 @@ urlpatterns = [
 
     # 用户空间
     url(r'^user/', include(('apps.users.urls', 'users'), namespace="user")),
+
+    # DjangoUeditor
+    url(r'^ueditor/', include('DjangoUeditor.urls')),
 ]

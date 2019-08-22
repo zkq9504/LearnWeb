@@ -14,12 +14,28 @@ class BaseSettings(object):
     use_bootswatch = True
 
 
+class LessonsInline(object):
+    model = Lessons
+    style = "tab"
+    extra = 1
+
+
 class CoursesAdmin(object):
     list_display = ["id", "name", "teacher", "category", "tag", "degree", "learn_times", "add_time"]
     search_fields = ["teacher", "name", "desc", "degree", "learn_times", "students", "fav_nums", "click_nums",
                      "category", "tag", "you_need_now", "teacher_tell"]
     list_filter = ["teacher__name", "name", "degree", "learn_times", "students", "fav_nums", "click_nums", "category", "tag", "add_time"]
     list_editable = ["teacher", "name", "desc", "degree", "learn_times", "category", "tag"]
+    # inlines = [LessonsInline]
+
+    # 重载save_model方法，新增课程时对应的机构课程数加1
+    def save_model(self):
+        obj = self.new_obj
+        if not obj.id:
+            obj.save()
+            course_org = obj.course_org
+            course_org.course_nums += 1
+            course_org.save()
 
 
 class LessonsAdmin(object):

@@ -7,4 +7,3 @@ httplib2
 six
 xlwt
 xlsxwriter
-requests
