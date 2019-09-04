@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 SECRET_KEY = '-tyv7wn4u%(y%u5e0r_r$t2aculx5%v(4=1su^mq+6z^*x4+#7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -95,8 +95,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'learnonline',
         'USER': 'root',
-        # 'PASSWORD': '123456',
-        'PASSWORD': '654321',
+        'PASSWORD': '123456',
+        # 'PASSWORD': '654321',
         'HOST': '127.0.0.1'
     }
 }
@@ -148,7 +148,7 @@ STATICFILES_DIRS = [
 # 上传媒体文件配置
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 云片发送验证码配置
 API_KEY = "d6c4ddbf50ab36611d2f52041a0b949e"
